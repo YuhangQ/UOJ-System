@@ -18,10 +18,12 @@ getAptPackage(){
     dpkg -s gnupg 2>/dev/null || (apt-get update && apt-get install -y gnupg)
     echo "deb http://ppa.launchpad.net/stesie/libv8/ubuntu bionic main" | tee /etc/apt/sources.list.d/stesie-libv8.list && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1A10946ED858A0DF
 
+    apt-get install curl
+
     for fingerprint in 40976EAF437D05B5 3B4FE6ACC0B21F32 1A10946ED858A0DF; do
         curl "http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x$fingerprint" | \
         awk '/-----BEGIN PGP/{p=1} /-----END PGP/{print; p=0} p==1{print}' > key.txt;
-        sudo apt-key add key.txt;
+        apt-key add key.txt;
     done
 
 
