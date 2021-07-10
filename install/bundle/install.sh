@@ -18,6 +18,12 @@ getAptPackage(){
     dpkg -s gnupg 2>/dev/null || (apt-get update && apt-get install -y gnupg)
     echo "deb http://ppa.launchpad.net/stesie/libv8/ubuntu bionic main" | tee /etc/apt/sources.list.d/stesie-libv8.list && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1A10946ED858A0DF
 
+    for fingerprint in 40976EAF437D05B5 3B4FE6ACC0B21F32 1A10946ED858A0DF; do
+        curl "http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x$fingerprint" | \
+        awk '/-----BEGIN PGP/{p=1} /-----END PGP/{print; p=0} p==1{print}' > key.txt;
+        sudo apt-key add key.txt;
+    done
+
 
     apt-get update && apt-get install -y vim ntp zip unzip curl wget apache2 libapache2-mod-xsendfile libapache2-mod-php php php-dev php-pear php-zip php-mysql php-mbstring mysql-server cmake fp-compiler re2c libv8-7.5-dev libyaml-dev python python3 python3-requests openjdk-8-jdk openjdk-11-jdk
     #Install PHP extensions
