@@ -10,12 +10,15 @@ _main_judger_password_=$(genRandStr 32)
 
 getAptPackage(){
     printf "\n\n==> Getting environment packages\n"
+
     #Set MySQL root password
     export DEBIAN_FRONTEND=noninteractive
     (echo "mysql-server mysql-server/root_password password $_database_password_";echo "mysql-server mysql-server/root_password_again password $_database_password_") | debconf-set-selections
     #Update apt sources and install
     dpkg -s gnupg 2>/dev/null || (apt-get update && apt-get install -y gnupg)
-    echo "deb http://ppa.launchpad.net/stesie/libv8/ubuntu bionic main" | tee /etc/apt/sources.list.d/stesie-libv8.list && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D858A0DF
+    echo "deb http://ppa.launchpad.net/stesie/libv8/ubuntu bionic main" | tee /etc/apt/sources.list.d/stesie-libv8.list && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1A10946ED858A0DF
+
+
     apt-get update && apt-get install -y vim ntp zip unzip curl wget apache2 libapache2-mod-xsendfile libapache2-mod-php php php-dev php-pear php-zip php-mysql php-mbstring mysql-server cmake fp-compiler re2c libv8-7.5-dev libyaml-dev python python3 python3-requests openjdk-8-jdk openjdk-11-jdk
     #Install PHP extensions
     yes | pecl install yaml
