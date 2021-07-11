@@ -15,6 +15,15 @@ getAptPackage(){
     (echo "mysql-server mysql-server/root_password password $_database_password_";echo "mysql-server mysql-server/root_password_again password $_database_password_") | debconf-set-selections
     #Update apt sources and install
     echo "deb http://ppa.launchpad.net/stesie/libv8/ubuntu bionic main" | tee /etc/apt/sources.list.d/stesie-libv8.list && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D858A0DF
+
+
+    apt-get install -y curl
+    for fingerprint in 40976EAF437D05B5 3B4FE6ACC0B21F32 1A10946ED858A0DF; do
+        curl "http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x$fingerprint" | \
+        awk '/-----BEGIN PGP/{p=1} /-----END PGP/{print; p=0} p==1{print}' > key.txt;
+        apt-key add key.txt;
+    done
+
     apt-get update && apt-get install -y libv8-7.5-dev
     #Install PHP extensions
     yes | pecl install yaml
