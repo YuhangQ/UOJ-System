@@ -18,7 +18,7 @@ getAptPackage(){
 
 
     apt-get install -y curl
-    for fingerprint in 40976EAF437D05B5 3B4FE6ACC0B21F32 1A10946ED858A0DF; do
+    for fingerprint in 1A10946ED858A0DF; do
         curl "http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x$fingerprint" | \
         awk '/-----BEGIN PGP/{p=1} /-----END PGP/{print; p=0} p==1{print}' > key.txt;
         apt-key add key.txt;
